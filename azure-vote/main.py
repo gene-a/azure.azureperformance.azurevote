@@ -21,7 +21,8 @@ from opencensus.trace.samplers import ProbabilitySampler
 from opencensus.trace.tracer import Tracer
 from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 
-appAnalyticsConnString = 'InstrumentationKey=639fcd52-79de-4a69-bb76-b7ac88d85fda;IngestionEndpoint=https://westus2-1.in.applicationinsights.azure.com/'
+appAnalyticsConnString = 'InstrumentationKey=8b3130f2-ba1b-41d7-9425-fcbc5616b81d'
+app = Flask(__name__)
 
 # Logging
 logger = logging.getLogger(__name__)
@@ -40,8 +41,6 @@ tracer = Tracer(
         connection_string=appAnalyticsConnString),
     sampler=ProbabilitySampler(1.0),
 )
-
-app = Flask(__name__)
 
 # Requests
 middleware = FlaskMiddleware(
@@ -106,14 +105,14 @@ def index():
             properties = {'custom_dimensions': {'Cats Vote': vote1}}
             # TODO: use logger object to log cat vote
             vote1 = r.get(button1).decode('utf-8')
-            logger.info(app.config['VOTE1VALUE'])
+            logger.error(app.config['VOTE1VALUE'])
 
             r.set(button2,0)
             vote2 = r.get(button2).decode('utf-8')
             properties = {'custom_dimensions': {'Dogs Vote': vote2}}
             # TODO: use logger object to log dog vote
             vote2 = r.get(button2).decode('utf-8')
-            logger.info(app.config['VOTE2VALUE'])
+            logger.error(app.config['VOTE2VALUE'])
 
             return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
 
