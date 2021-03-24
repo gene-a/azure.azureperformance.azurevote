@@ -26,7 +26,7 @@ app = Flask(__name__)
 # Load configurations from environment or config file
 app.config.from_pyfile('config_file.cfg')
 
-appAnalyticsConnString = 'InstrumentationKey=8b3130f2-ba1b-41d7-9425-fcbc5616b81d'
+appAnalyticsConnString = 'InstrumentationKey=8b3130f2-ba1b-41d7-9425-fcbc5616b81d;IngestionEndpoint=https://westus2-2.in.applicationinsights.azure.com/'
 
 # Logging
 logger = logging.getLogger(__name__)
@@ -81,6 +81,13 @@ if not r.get(button2): r.set(button2,0)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    # customException = "customException"
+    # tracer.span(name=customException)
+
+    # try:
+    #     raise Exception(customException)
+    # except Exception:
+    #     logger.error(customException)
 
     if request.method == 'GET':
 
@@ -97,23 +104,22 @@ def index():
         return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
 
     elif request.method == 'POST':
-
         if request.form['vote'] == 'reset':
 
             # Empty table and return results
             r.set(button1,0)
             vote1 = r.get(button1).decode('utf-8')
-            properties = {'custom_dimensions': {'Cats Vote': vote1}}
+            properties1 = {'custom_dimensions': {'Cats Vote': vote1}}
             # TODO: use logger object to log cat vote
             vote1 = r.get(button1).decode('utf-8')
-            logger.error(app.config['VOTE1VALUE'])
+            logger.error(app.config['VOTE1VALUE'], extra=properties1)
 
             r.set(button2,0)
             vote2 = r.get(button2).decode('utf-8')
-            properties = {'custom_dimensions': {'Dogs Vote': vote2}}
+            properties2 = {'custom_dimensions': {'Dogs Vote': vote2}}
             # TODO: use logger object to log dog vote
             vote2 = r.get(button2).decode('utf-8')
-            logger.error(app.config['VOTE2VALUE'])
+            logger.error(app.config['VOTE2VALUE'], extra=properties2)
 
             return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
 
