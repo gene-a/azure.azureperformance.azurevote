@@ -21,8 +21,12 @@ from opencensus.trace.samplers import ProbabilitySampler
 from opencensus.trace.tracer import Tracer
 from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 
-appAnalyticsConnString = 'InstrumentationKey=8b3130f2-ba1b-41d7-9425-fcbc5616b81d'
 app = Flask(__name__)
+
+# Load configurations from environment or config file
+app.config.from_pyfile('config_file.cfg')
+
+appAnalyticsConnString = 'InstrumentationKey=8b3130f2-ba1b-41d7-9425-fcbc5616b81d'
 
 # Logging
 logger = logging.getLogger(__name__)
@@ -48,9 +52,6 @@ middleware = FlaskMiddleware(
     exporter=AzureExporter(connection_string=appAnalyticsConnString),
     sampler=ProbabilitySampler(rate=1.0),
 )
-
-# Load configurations from environment or config file
-app.config.from_pyfile('config_file.cfg')
 
 if ("VOTE1VALUE" in os.environ and os.environ['VOTE1VALUE']):
     button1 = os.environ['VOTE1VALUE']
