@@ -81,6 +81,7 @@ if not r.get(button2): r.set(button2,0)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    # Custom exception code to raise azure alerts
     # customException = "customException"
     # tracer.span(name=customException)
 
